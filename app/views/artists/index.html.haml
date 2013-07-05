@@ -1,0 +1,21 @@
+%h1
+  Artists
+
+= link_to 'New Artist', new_artist_path
+%br
+%br
+
+%table
+  %thead
+    %th
+      ID
+    %th
+      Name
+    %th
+      URL
+  %tbody
+    - @artists.each do |artist|
+      %tr
+        %td= artist.id
+        %td= link_to "#{artist.name}", "/artists/#{artist.id}"
+        %td #{artist.url}
