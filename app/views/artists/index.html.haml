@@ -13,9 +13,12 @@
       Name
     %th
       URL
+    %th
   %tbody
     - @artists.each do |artist|
       %tr
         %td= artist.id
         %td= link_to "#{artist.name}", "/artists/#{artist.id}"
         %td #{artist.url}
+        %td 
+          = link_to('delete', artist_path(artist), method: :delete, confirm: 'Are you sure you want to delete this album?')

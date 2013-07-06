@@ -84,12 +84,21 @@ describe 'Artists'  do
     end
   end
 
-  describe 'deletes artist' do
+  describe 'delete artist' do
     before do
       visit '/artists'
     end
 
-    it 'deletes artist from Artist page'
+    it 'deletes artist from Artist page' do
+      find('h1').should have_content('Artists')
+      # page.should have_xpath('//table/tbody/tr/td')
+      # find_button('delete').click
+      # find_link('delete').visible?
+      has_link?('delete')
+      click_link('delete')
+      find('h1').should have_content('Artists')
+      page.should_not have_content(@artist)
+    end
   end
 
   describe 'New Artist page' do
