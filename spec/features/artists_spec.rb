@@ -3,8 +3,8 @@ require 'spec_helper'
 
 describe 'Artists'  do
   before(:each) do
-    create(:artist)
-    create(:artist2)
+    @artist = create(:artist)
+    @artist2 = create(:artist2)
   end
 
   describe 'navigation from home page' do
@@ -15,12 +15,12 @@ describe 'Artists'  do
       click_link('Artists')
       find('h1').should_not have_content('HOME')
       find('h1').should have_content('Artists')
-    end 
+    end
   end
 
   describe 'Artists page' do
     before do
-       visit '/artists'
+      visit '/artists'
     end
     it 'displays link to artist#new' do
       find('h1').should have_content('Artists')
@@ -42,11 +42,54 @@ describe 'Artists'  do
 
   describe 'Artist Show page' do
     before do
-       visit artist_path
+      visit artist_path(@artist)
     end
     it'displays artist info' do
-      pending
+      page.should have_content(@artist.name)
+      page.should have_content(@artist.url)
     end
+
+    it 'has an edit button' do
+      click_link('edit')
+      find('h1').should have_content('Edit Artist')
+    end
+  end
+
+  describe 'edit and update artist' do
+    before do
+      visit edit_artist_path(@artist)
+    end
+    it 'has form for current artist that can be updated' do
+      find('h1').should have_content('Edit Artist')
+      page.should have_selector('form')
+      page.has_field?('Name', :with => @artist.name)
+      page.has_field?('Url', :with => @artist.url)
+      within('form') do
+        fill_in 'Name', with: 'bels band'
+        fill_in 'Url', with: 'bel.band.com'
+        find_field('Name').value.should eq 'bels band'
+        find_field('Url').value.should eq 'bel.band.com'
+        click_button("Update Artist")
+      end
+      @updated_name = 'bels band'
+      @updated_url = 'bel.band.com'
+      expect(page).to have_content @updated_name
+      expect(page).to have_content @updated_url
+    end
+
+    it 'updates artist' do
+      find('h1').should have_content(Artist)
+      page.should have_content(@updated_name)
+      page.should have_content(@updated_url)
+    end
+  end
+
+  describe 'deletes artist' do
+    before do
+      visit '/artists'
+    end
+
+    it 'deletes artist from Artist page'
   end
 
   describe 'New Artist page' do
@@ -63,7 +106,7 @@ describe 'Artists'  do
         click_button("Create Artist")
       end
       expect(page).to have_content 'Artists'
-      (Artist.count).should eq 3  
+      (Artist.count).should eq 3
     end
   end
 

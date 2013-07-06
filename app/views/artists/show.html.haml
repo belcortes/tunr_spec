@@ -3,8 +3,5 @@
 
 %h4
   = @artist.url
-/ = image_tag artist.img_url, class: 'constrained'
-/ - if current_user && current_user.admin?
-/   = link_to('edit', edit_artist_path(artist))
-/   = link_to('delete', artist_path(artist), method: :delete, confirm: 'Are you sure you want to delete this artist?')
-/ %br
+
+= link_to('edit', edit_artist_path(@artist))
